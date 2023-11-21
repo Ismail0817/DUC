@@ -24,24 +24,32 @@ def communicate_with_fog(data):
     # logic to send data to fog
 
     port_mapping = {"5001/tcp": 5001}
-    container = client.containers.run("program2:1.0", detach=True, ports=port_mapping)
+    container = client.containers.run("program2:1.0", detach=True, ports=port_mapping, name = "fog")
     print(container.status)
 
     time.sleep(5)
 
     response = requests.post("http://localhost:5001/communicate_with_fog", json={"data": data})
+    container.stop()
+    container.remove()
+    # print(container.status)
+
     return response.json()["result"]
 
 def communicate_with_cloud(data):
     # logic to send data to cloud
 
     port_mapping = {"5002/tcp": 5002}
-    container = client.containers.run("program3:1.0", detach=True, ports=port_mapping)
+    container = client.containers.run("program3:1.0", detach=True, ports=port_mapping, name = "cloud")
     print(container.status)
 
     time.sleep(5)
 
     response = requests.post("http://localhost:5002/communicate_with_cloud", json={"data": data})
+    container.stop()
+    container.remove()
+    # print(container.status)
+
     return response.json()["result"]
 
 @app.route('/process_data', methods=['POST'])
