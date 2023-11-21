@@ -1,0 +1,10 @@
+FROM python:3.8
+
+COPY program3.py /app/
+
+WORKDIR /app
+
+RUN pip3 install requests
+RUN pip3 install flask
+
+CMD ["python", "program3.py"]
