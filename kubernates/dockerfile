@@ -1,0 +1,10 @@
+FROM python:3.13.0a1-alpine3.18
+
+COPY middleware.py /app/
+
+WORKDIR /app
+
+RUN pip3 install requests
+RUN pip3 install flask
+
+CMD ["python", "middleware.py"]
