@@ -30,19 +30,22 @@ def api():
 
     if function_from_fog == "open_socket":
         host = "127.0.0.1"  
-        port = 12345         
+        port = 12345    
+
+        cloud_host = "127.0.0.1"
+        cloud_port = 2314     
 
         # calling the dala handler module which will open a new socket to get data. it is done in 
         # new thread otherwise the code will get stuck here
-        socket_opener = threading.Thread(target=open_socket, args=(host, port))
+        socket_opener = threading.Thread(target=open_socket, args=(host, port, cloud_host, cloud_port))
         socket_opener.start()
         return jsonify({"result": f"socket opened on {host}:{port} ", "host": host, "port": port})
     
     
     return jsonify({"result": "no function found"})
 
-def open_socket(host, port):
-    data_handler = DataHandler(host, port)
+def open_socket(host, port, cloud_host, cloud_port):
+    data_handler = DataHandler(host, port, cloud_host, cloud_port)
     data_handler.start_server()
 
 if __name__ == '__main__':
