@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 @app.route('/api', methods=['POST'])
 def api():
-    # initialize a variable with data from fog. Data got through api reequeest
+    # initialize a variable with data from fog. Data got through api request
     function_from_fog = request.json['function']
     name_from_fog = request.json['name']
 
