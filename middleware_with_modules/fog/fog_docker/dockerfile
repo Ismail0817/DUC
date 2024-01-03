@@ -1,0 +1,10 @@
+FROM python:3.8-slim
+
+COPY fog.py /app/
+
+WORKDIR /app
+
+RUN pip3 install requests
+RUN pip3 install flask
+
+CMD ["python", "fog.py"]
