@@ -2,7 +2,7 @@ import socket
 import threading
 import requests
 
-from cloud import Cloud
+# from cloud import Cloud
 
 class DataHandler:
     def __init__(self, host, port, cloud_host, cloud_port):
@@ -60,9 +60,9 @@ class DataHandler:
         finally:
             self.server_socket.close()
 
-    def open_socket_cloud(self,cloud_host, cloud_port):
-        cloud = Cloud(cloud_host, cloud_port)
-        cloud.start_server()
+    # def open_socket_cloud(self,cloud_host, cloud_port):
+    #     cloud = Cloud(cloud_host, cloud_port)
+    #     cloud.start_server()
 
     
     # def send_data_to_cloud(self,host, port, data):

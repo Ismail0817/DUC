@@ -1,5 +1,6 @@
 import socket
 import threading
+import requests
 
 from cloud import Cloud
 
@@ -19,29 +20,35 @@ class DataHandler:
         try:
             self.server_socket.bind((self.host, self.port))
             self.server_socket.listen(1)
-            print(f"Middleware listening on {self.host}:{self.port}")
+            print(f"edge Middleware data handler listening on {self.host}:{self.port}")
 
             # Wait for a connection
-            print("Middleware Waiting for a connection...")
+            print("edge Middleware data handler Waiting for a connection...")
+            
+            response_from_fog_middleware = requests.post("http://localhost:5000/api_fog", json={"function": "open_socket_for_edge", "name": "process1"})
+            print(response_from_fog_middleware.json()["result"])
+            fog_middleware_host = response_from_fog_middleware.json()["host"]
+            fog_middleware_port = response_from_fog_middleware.json()["port"]
+
             client_socket, client_address = self.server_socket.accept()
 
-            print(f"Connected to {client_address}")
+            print(f"edge Middleware data handler Connected to {client_address}")
 
             # socket_opener = threading.Thread(target=self.open_socket_cloud, args=(self.cloud_host, self.cloud_port))
             # socket_opener.start()
 
             cloud_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            cloud_socket.connect((self.cloud_host, self.cloud_port))
-            print(f"cloud middleware Connected to Cloud at {self.cloud_host}:{self.cloud_port}")
+            cloud_socket.connect((fog_middleware_host, fog_middleware_port))
+            print(f"Connected to fog middleware at {self.cloud_host}:{self.cloud_port}")
 
             while True:
                 # Receive data from the client
                 data = client_socket.recv(1024)
                 if not data:
                     break  # Break the loop if no data is received
-                print(f"Cloud Middleware Received data: {data.decode('utf-8')}")
+                print(f"edge Middleware Received data: {data.decode('utf-8')}")
                 cloud_socket.sendall(data)
-                print(f"Cloud Middleware Send data: {data.decode('utf-8')}")
+                print(f"edge Middleware Send data: {data.decode('utf-8')}")
 
 
             # Close the connection
